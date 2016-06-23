@@ -58,8 +58,8 @@
       </Models>
       <Categories />
     </ResourceFamily>
-    <ResourceFamily Name="L1 Optical Switch Port" IsMappable="true" IsConnectable="true" IsLockedByDefault="true" SupportsLoopbackMapping="false"  Description=""  IsSearchable="true">
-      <AttachedAttributes />
+    <ResourceFamily Name="L1 Optical Switch Port" IsMappable="true" IsConnectable="true" IsLockedByDefault="true" SupportsLoopbackMapping="true"  Description=""  IsSearchable="true">
+    <AttachedAttributes />
       <AttributeValues />
       <Models>
         <ResourceModel Name="Port Telescent112-A" SupportsConcurrentCommands="false">

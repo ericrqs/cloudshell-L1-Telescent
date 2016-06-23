@@ -8,6 +8,7 @@ from common.driver_handler_base import DriverHandlerBase
 from common.xml_wrapper import XMLWrapper
 from resource_info2 import ResourceInfo2
 
+
 class TelescentDriverHandler(DriverHandlerBase):
     def __init__(self):
         DriverHandlerBase.__init__(self)
@@ -88,19 +89,20 @@ class TelescentDriverHandler(DriverHandlerBase):
             blade = ResourceInfo2('module%0.2d' % (module), str(module), bladefamily, blademodel, serial=bladeserial)
             for row in range(0,8):
                 for col in range(0, 12):
-                    portname = 'row_%d_col_%0.2d' % (row, col)
-                    portaddr = '%d,%d' % (row, col)
+                    # portname = 'row_%d_col_%0.2d' % (row, col)
+                    # portaddr = '%d,%d' % (row, col)
                     absaddr = (module * 8 + row) * 12 + col
+                    portname = '%0.4d' % absaddr
+                    portaddr = '%d' % absaddr
                     if absaddr in outaddr2inaddrstatus and outaddr2inaddrstatus[absaddr][1].startswith('A'):
-                        connaddr = int(outaddr2inaddrstatus[absaddr][0])
-                        connglobrow = connaddr / 12
+                        connabsaddr = int(outaddr2inaddrstatus[absaddr][0])
+                        connglobrow = connabsaddr / 12
                         connmodule = connglobrow / 8
-                        connrow = connglobrow % 8
-                        conncol = connaddr % 12
-                        mappath = '%s/%d/%d,%d' % (address, connmodule, connrow, conncol)
+                        # connrow = connglobrow % 8
+                        # conncol = connabsaddr % 12
+                        mappath = '%s/%d/%d' % (address, connmodule, connabsaddr)
                     else:
                         mappath = None
-                    # mappath = None
                     # todo Warning "An item with the same key has already been added." caused by nonblank mappath
                     portserial = address + '/' + str(module) + '/' + portaddr
                     blade.subresources.append(ResourceInfo2(portname, portaddr, portfamily, portmodel, map_path=mappath, serial=portserial))
@@ -111,8 +113,8 @@ class TelescentDriverHandler(DriverHandlerBase):
         return XMLWrapper.parse_xml(sw.to_string())
 
     def map_uni(self, src_port, dst_port, command_logger=None):
-        a = ','.join(src_port[1:])
-        b = ','.join(dst_port[1:])
+        a = src_port[-1]
+        b = dst_port[-1]
         self.log('map_uni ' + a + ' ' + b)
         out = ''
         out += self._session.send_command('unlock --force -in ' + a, re_string=self._prompt)
@@ -122,8 +124,8 @@ class TelescentDriverHandler(DriverHandlerBase):
             raise Exception('Error: ' + out)
 
     def map_bidi(self, src_port, dst_port, command_logger=None):
-        a = ','.join(src_port[1:])
-        b = ','.join(dst_port[1:])
+        a = src_port[-1]
+        b = dst_port[-1]
         self.log('map_bidi ' + a + ' ' + b)
         out = ''
         out += self._session.send_command('unlock --force ' + a, re_string=self._prompt)
@@ -133,8 +135,8 @@ class TelescentDriverHandler(DriverHandlerBase):
             raise Exception('Error: ' + out)
 
     def map_clear_to(self, src_port, dst_port, command_logger=None):
-        a = ','.join(src_port[1:])
-        b = ','.join(dst_port[1:])
+        a = src_port[-1]
+        b = dst_port[-1]
         self.log('map_clear_to ' + a + ' ' + b)
         out = ''
         # out += self._session.send_command('unlock --force -in ' + a, re_string=self._prompt)
@@ -147,8 +149,8 @@ class TelescentDriverHandler(DriverHandlerBase):
             raise Exception('Error: ' + out)
 
     def map_clear(self, src_port, dst_port, command_logger=None):
-        a = ','.join(src_port[1:])
-        b = ','.join(dst_port[1:])
+        a = src_port[-1]
+        b = dst_port[-1]
         self.log('map_clear ' + a + ' ' + b)
         out = ''
         out += self._session.send_command('unlock --force ' + a, re_string=self._prompt)
