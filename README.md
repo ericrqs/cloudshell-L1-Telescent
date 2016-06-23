@@ -1,6 +1,6 @@
 # cloudshell-L1-Telescent
 
-Note that the unidirectional MapClearTo performs a bidirectional unlock because of an apparent bug in the switch (or at least the simulator). 
+Note that the unidirectional MapClearTo must perform a bidirectional "unlock" on the port because of an apparent bug in the switch (or at least the simulator) that prevents "unallocate" from working on a unidirectionally unlocked port.
 
 
 Set SSH port and resource family and model names in telescent_runtime_configuration.json and telescent_datamodel.xml.
